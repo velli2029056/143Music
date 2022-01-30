@@ -35,72 +35,35 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       /* layout=findViewById(R.id.sliding_layout);
-        layout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
-            @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-           //     findViewById(R.id.view).setAlpha(1-slideOffset);
-            }
-
-            @Override
-            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-            }
-        });*/
         lst=findViewById(R.id.songs);
         runtimePermission();
         displaySongs();
     }
-    public ArrayList<Track> findSong(File file){
-        ArrayList<Track> al=new ArrayList<>();
-        /*File[] files=file.listFiles();
-        for(File singleFile:files){
-            if(singleFile.isDirectory() && !singleFile.isHidden()){
-                al.addAll(findSong(singleFile));
-            }
-            else
-            {
-                if(singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav"))
-                {
-                    al.add(singleFile);
+    public ArrayList<File> findSong(File file) {
+        ArrayList arrayList = new ArrayList();
+        File [] files = file.listFiles();
+        if(files != null) {
+            for (File singlefile : files) {
+                if (singlefile.isDirectory() && !singlefile.isHidden()) {
+                    arrayList.addAll(findSong(singlefile));
+                } else {
+                    if (singlefile.getName().endsWith(".wav")) {
+                        arrayList.add(singlefile);
+                    } else if (singlefile.getName().endsWith(".mp3")) {
+                        arrayList.add(singlefile);
+                    }
                 }
-            }
-        }*/
-        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
 
-        String[] projection = {
-                MediaStore.Audio.AlbumColumns.ALBUM,
-                MediaStore.Audio.AlbumColumns.ARTIST,
-                MediaStore.Audio.AlbumColumns.,
-                MediaStore.Audio.Media.DISPLAY_NAME
-        };
-        final Uri uri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
-        Cursor c = getApplicationContext().getContentResolver().query(uri, projection, null, null, null);
-        if(c!=null) {
-            c.moveToFirst();
-            while (c.moveToNext()) {
-                Track sd = new Track();
-                @SuppressLint("Range") String title = c.getString(c.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                @SuppressLint("Range") String key = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM_KEY));
-                @SuppressLint("Range") String artist = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                @SuppressLint("Range") String album = c.getString(c.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                @SuppressLint("Range") long albumId = c.getLong(c.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-               // @SuppressLint("Range") String composer = c.getString(c.getColumnIndex(MediaStore.Audio.Media.COMPOSER));
-                sd.setTitle(title);
-                sd.setAlbum(album);
-                sd.setArtist(artist);
-                sd.setAlbumId(albumId);
-                al.add(sd);
             }
         }
-        System.out.println("---------"+al.size()+"------------");
-        return al;
+        return arrayList;
     }
     public void displaySongs()
     {
-        final ArrayList<Track> mySongs=findSong(Environment.getExternalStorageDirectory());
+        final ArrayList<File> mySongs=findSong(Environment.getExternalStorageDirectory());
         items =new String[mySongs.size()];
         for(int i=0;i<mySongs.size();i++){
-            items[i]=mySongs.get(i).getTitle().toString().replace(".mp3","").replace(".wav","");
+            items[i]=mySongs.get(i).getName().toString().replace(".mp3","").replace(".wav","");
         }
         ArrayAdapter<String> myadap=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,items);
         lst.setAdapter(myadap);
@@ -110,12 +73,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String songName=(String) lst.getItemAtPosition(position);
-               // layout.setDragView(R.layout.activity_player);
                 startActivity(new Intent(getApplicationContext(),PlayerActivity.class)
                 .putExtra("songs",mySongs)
                 .putExtra("songname",songName)
                 .putExtra("pos",position));
-              //  layout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
             }
         });
     }
@@ -136,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
 
     class customAdapter extends BaseAdapter
     {
-
         @Override
         public int getCount() {
             return items.length;

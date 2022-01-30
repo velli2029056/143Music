@@ -37,7 +37,7 @@ public class PlayerActivity extends AppCompatActivity {
     public  static final String EXTRA_NAME="song_name";
     static  MediaPlayer mediaPlayer=null;
     int     position;
-    ArrayList<Track> mySongs;
+    ArrayList<File> mySongs;
 
     public static String time="";
     public static int cindex=0;
@@ -58,12 +58,6 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
-        //SlidingUpPanelLayout layout=findViewById(R.id.sliding_layout);
-        //layout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-        //layout.setDragView(R.layout.activity_player);
-        //getSupportActionBar().setTitle("Now Playing");
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         prev=findViewById(R.id.prev);
         next=findViewById(R.id.next);
@@ -83,7 +77,7 @@ public class PlayerActivity extends AppCompatActivity {
         position=bundle.getInt("pos",0);
         textName.setSelected(true);
         Uri uri=Uri.parse(mySongs.get(position).getPath());
-        sname=mySongs.get(position).getTitle();
+        sname=mySongs.get(position).getName();
         textName.setText(sname);
         if(mediaPlayer!=null) {
             if(cindex!=position) {
@@ -172,7 +166,7 @@ public class PlayerActivity extends AppCompatActivity {
                 cindex=position;
                 Uri uri1=Uri.parse(mySongs.get(position).getPath());
                 mediaPlayer=MediaPlayer.create(getApplicationContext(),uri1);
-                sname=mySongs.get(position).getTitle();
+                sname=mySongs.get(position).getName();
                 textName.setText(sname);
                 mediaPlayer.start();
                 play.setBackgroundResource(R.drawable.ic_pause);
@@ -191,7 +185,7 @@ public class PlayerActivity extends AppCompatActivity {
                 cindex=position;
                 Uri u =Uri.parse(mySongs.get(position).getPath());
                 mediaPlayer=MediaPlayer.create(getApplicationContext(),u);
-                sname=mySongs.get(position).getTitle();
+                sname=mySongs.get(position).getName();
                 textName.setText(sname);
                 mediaPlayer.start();
                 play.setBackgroundResource(R.drawable.ic_pause);
